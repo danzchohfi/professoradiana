@@ -1,0 +1,38 @@
+---
+import type { Content } from "../i18n/content";
+interface Props {
+  c: Content;
+}
+const { c } = Astro.props;
+const m = c.manifesto;
+---
+
+<section class="manifesto" data-manifesto aria-labelledby="manifesto-title">
+  <div class="wrap manifesto__inner">
+    <p class="eyebrow" id="manifesto-title">{m.eyebrow}</p>
+    <p class="manifesto__text serif" data-manifesto-text>
+      {m.before} <em>{m.em}</em>{m.after}
+    </p>
+  </div>
+</section>
+
+<style>
+  .manifesto {
+    padding-block: clamp(5rem, 14vw, 11rem);
+    background: var(--paper);
+  }
+  .manifesto__inner {
+    max-width: 1180px;
+  }
+  .manifesto__text {
+    margin: 0;
+    font-size: clamp(1.9rem, 1.1rem + 3.4vw, 4.4rem);
+    font-weight: 330;
+    line-height: 1.12;
+    letter-spacing: -0.022em;
+    text-wrap: pretty;
+  }
+  .manifesto__text em {
+    color: var(--pen-ink);
+  }
+</style>

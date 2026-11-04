@@ -1,0 +1,63 @@
+---
+// A ponte entre as duas versões do site: no português, um convite em inglês
+// para o estrangeiro; no inglês, um convite em português para o brasileiro.
+import type { Content } from "../i18n/content";
+interface Props {
+  c: Content;
+}
+const { c } = Astro.props;
+const b = c.bridge;
+---
+
+<aside class="bridge" lang={b.htmlLang} aria-label={b.title}>
+  <div class="wrap bridge__inner">
+    <p class="bridge__kicker" data-reveal>{b.kicker}</p>
+    <p class="bridge__title display" data-reveal>{b.title}</p>
+    <div class="bridge__side" data-reveal>
+      <p class="bridge__text">{b.text}</p>
+      <a class="link-arrow" href={b.href} hreflang={b.htmlLang}>{b.link} <span aria-hidden="true">→</span></a>
+    </div>
+  </div>
+</aside>
+
+<style>
+  .bridge {
+    background: var(--paper-2);
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    padding-block: clamp(3.5rem, 8vw, 6rem);
+  }
+  .bridge__inner {
+    display: grid;
+    gap: 1.2rem;
+    align-items: center;
+  }
+  .bridge__kicker {
+    margin: 0;
+    font-size: 0.78rem;
+    font-weight: 560;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--pen-ink);
+  }
+  .bridge__title {
+    margin: 0;
+    font-size: clamp(2.2rem, 1.3rem + 3.6vw, 4.4rem);
+    font-style: italic;
+    font-variation-settings: "SOFT" 100, "WONK" 1;
+  }
+  .bridge__text {
+    margin: 0 0 1rem;
+    max-width: 40ch;
+    color: #2c3445;
+  }
+  @media (min-width: 900px) {
+    .bridge__inner {
+      grid-template-columns: 1.3fr 1fr;
+      column-gap: 4rem;
+    }
+    .bridge__kicker {
+      grid-column: 1 / -1;
+    }
+  }
+</style>

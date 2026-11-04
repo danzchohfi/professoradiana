@@ -1,0 +1,43 @@
+---
+import Base from "../layouts/Base.astro";
+import Logo from "../components/Logo.astro";
+import { content } from "../i18n/content";
+const c = content.pt;
+---
+
+<Base c={c} noindex>
+  <main class="nf on-dark" id="conteudo">
+    <Logo href="/" label="Professora Diana" />
+    <p class="nf__code serif"><em>Ops.</em></p>
+    <h1 class="display nf__title">Esta página não existe — ainda.</h1>
+    <p class="nf__text" lang="en">This page doesn’t exist.</p>
+    <a class="btn btn--pen" href="/">Voltar ao início</a>
+  </main>
+</Base>
+
+<style>
+  .nf {
+    min-height: 100svh;
+    display: grid;
+    align-content: center;
+    justify-items: start;
+    gap: 1.4rem;
+    padding: 2rem var(--gutter);
+    background: var(--ink);
+    color: var(--paper);
+  }
+  .nf__code {
+    margin: 2rem 0 0;
+    font-size: clamp(4rem, 14vw, 10rem);
+    line-height: 1;
+    color: var(--pen-glow);
+  }
+  .nf__title {
+    font-size: clamp(2rem, 5vw, 3.6rem);
+    max-width: 18ch;
+  }
+  .nf__text {
+    margin: 0;
+    color: var(--muted-dark);
+  }
+</style>

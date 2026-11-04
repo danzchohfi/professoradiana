@@ -1,0 +1,105 @@
+---
+import "@fontsource-variable/fraunces/full.css";
+import "@fontsource-variable/fraunces/full-italic.css";
+import "@fontsource-variable/inter";
+import "../styles/global.css";
+import { site } from "../data/site";
+import { content, type Content } from "../i18n/content";
+
+interface Props {
+  c: Content;
+  noindex?: boolean;
+}
+
+const { c, noindex = false } = Astro.props;
+const canonical = new URL(c.path, site.url).href;
+const ogImage = new URL(c.lang === "en" ? "/og-en.png" : "/og.png", site.url).href;
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "ProfessionalService",
+  "@id": `${site.url}/#servico`,
+  name: `${site.name} — ${c.lang === "pt" ? "Consultoria de idiomas" : "Language consultancy"}`,
+  url: canonical,
+  image: ogImage,
+  description: c.meta.description,
+  inLanguage: c.htmlLang,
+  areaServed: [{ "@type": "City", name: "São Paulo" }, { "@type": "Country", name: "Brasil" }],
+  address: { "@type": "PostalAddress", addressLocality: "São Paulo", addressRegion: "SP", addressCountry: "BR" },
+  ...(site.email ? { email: site.email } : {}),
+  sameAs: [site.facebook],
+  knowsLanguage: ["pt-BR", "en"],
+  serviceType: content[c.lang].services.items.map((s) => s.title),
+  founder: {
+    "@type": "Person",
+    name: site.person,
+    jobTitle: c.about.role,
+    alumniOf: { "@type": "CollegeOrUniversity", name: "Pontifícia Universidade Católica de São Paulo (PUC-SP)" },
+    hasCredential: { "@type": "EducationalOccupationalCredential", name: "CELTA — University of Cambridge" },
+    knowsLanguage: ["pt-BR", "en"],
+    sameAs: [site.facebook],
+  },
+};
+---
+
+<!doctype html>
+<html lang={c.htmlLang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>{c.meta.title}</title>
+    <meta name="description" content={c.meta.description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="alternate" hreflang="pt-BR" href={new URL("/", site.url).href} />
+    <link rel="alternate" hreflang="en" href={new URL("/en/", site.url).href} />
+    <link rel="alternate" hreflang="x-default" href={new URL("/", site.url).href} />
+    {noindex && <meta name="robots" content="noindex" />}
+
+    <meta name="theme-color" content="#0e1524" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon.png" type="image/png" sizes="64x64" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:locale" content={c.lang === "pt" ? "pt_BR" : "en_US"} />
+    <meta property="og:locale:alternate" content={c.lang === "pt" ? "en_US" : "pt_BR"} />
+    <meta property="og:title" content={c.meta.title} />
+    <meta property="og:description" content={c.meta.description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={c.meta.ogAlt} />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+
+    <!-- Liga as revelações animadas só quando há JS e o usuário não pediu menos movimento. -->
+    <script is:inline>
+      if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        document.documentElement.classList.add("motion");
+        // Rede de segurança: se o JS de movimento não subir, o conteúdo aparece.
+        setTimeout(function () {
+          if (!window.__motionReady) document.documentElement.classList.remove("motion");
+        }, 4000);
+      }
+    </script>
+  </head>
+  <body>
+    <a class="skip" href="#conteudo">{c.skip}</a>
+    <slot />
+
+    <!-- Duotone da foto: preto vira tinta, branco vira papel. Usado no retrato da Diana. -->
+    <svg width="0" height="0" aria-hidden="true" focusable="false" style="position:absolute">
+      <filter id="duotone" color-interpolation-filters="sRGB">
+        <feColorMatrix type="matrix" values="0.2126 0.7152 0.0722 0 0  0.2126 0.7152 0.0722 0 0  0.2126 0.7152 0.0722 0 0  0 0 0 1 0" />
+        <feComponentTransfer>
+          <feFuncR type="table" tableValues="0.055 0.957" />
+          <feFuncG type="table" tableValues="0.082 0.937" />
+          <feFuncB type="table" tableValues="0.141 0.902" />
+        </feComponentTransfer>
+      </filter>
+    </svg>
+  </body>
+</html>

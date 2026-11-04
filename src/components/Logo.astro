@@ -1,0 +1,83 @@
+---
+interface Props {
+  href: string;
+  label: string;
+}
+const { href, label } = Astro.props;
+---
+
+<a class="logo" href={href} aria-label={label}>
+  <span class="logo__mark" aria-hidden="true">
+    <span class="logo__d">D</span>
+    <svg class="logo__tick" viewBox="0 0 24 24"><path d="M3.5 13.2c2.1 1.4 3.7 3.2 5 5.3C11.6 12 15.6 7.3 20.8 4" /></svg>
+  </span>
+  <span class="logo__text" aria-hidden="true">
+    <small>Professora</small>
+    <span>Diana</span>
+  </span>
+</a>
+
+<style>
+  .logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.7rem;
+    text-decoration: none;
+    color: inherit;
+  }
+  .logo__mark {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    border: 1.5px solid currentColor;
+    transition: transform 0.6s var(--ease);
+  }
+  .logo:hover .logo__mark {
+    transform: rotate(-8deg);
+  }
+  .logo__d {
+    font-family: var(--serif);
+    font-style: italic;
+    font-variation-settings: "SOFT" 100, "WONK" 1, "opsz" 72;
+    font-weight: 420;
+    font-size: 1.45rem;
+    line-height: 1;
+    transform: translate(-0.04em, -0.02em);
+  }
+  .logo__tick {
+    position: absolute;
+    right: -0.45rem;
+    top: -0.35rem;
+    width: 1.15rem;
+    height: 1.15rem;
+    fill: none;
+    stroke: var(--pen);
+    stroke-width: 3;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .logo__text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1;
+  }
+  .logo__text small {
+    font-size: 0.62rem;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    opacity: 0.75;
+    margin-bottom: 0.2rem;
+  }
+  .logo__text span {
+    font-family: var(--serif);
+    font-style: italic;
+    font-variation-settings: "SOFT" 100, "WONK" 1;
+    font-weight: 380;
+    font-size: 1.45rem;
+    letter-spacing: -0.01em;
+  }
+</style>

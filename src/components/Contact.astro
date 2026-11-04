@@ -1,0 +1,101 @@
+---
+import PenMark from "./PenMark.astro";
+import type { Content } from "../i18n/content";
+import { site, whatsappHref, emailHref } from "../data/site";
+
+interface Props {
+  c: Content;
+}
+const { c } = Astro.props;
+const k = c.contact;
+const wa = whatsappHref(k.whatsappMessage);
+const mail = emailHref(k.emailSubject);
+---
+
+<section class="contact on-dark" id="contato" aria-labelledby="contato-title">
+  <div class="wrap">
+    <p class="eyebrow" data-reveal>{k.eyebrow}</p>
+    <h2 class="display contact__title" id="contato-title" data-reveal>
+      {k.titleBefore}{" "}<span class="pen-wrap"><em>{k.titleEm}</em><PenMark kind="circle" /></span>{k.titleAfter}
+    </h2>
+    <div class="contact__row">
+      <p class="contact__text" data-reveal>{k.text}</p>
+      <div class="contact__actions" data-reveal>
+        {wa && (
+          <a class="btn btn--pen" href={wa} target="_blank" rel="noopener" data-magnetic>
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.04 2a9.9 9.9 0 0 0-8.5 15l-1.4 5 5.15-1.35A9.9 9.9 0 1 0 12.04 2Zm0 18.1a8.2 8.2 0 0 1-4.18-1.15l-.3-.18-3.06.8.82-2.98-.2-.31a8.2 8.2 0 1 1 6.92 3.82Zm4.5-6.14c-.25-.12-1.46-.72-1.69-.8-.23-.08-.39-.12-.55.12-.16.25-.63.8-.78.97-.14.16-.29.18-.53.06a6.7 6.7 0 0 1-3.32-2.9c-.25-.43.25-.4.72-1.33.08-.16.04-.3-.02-.43-.06-.12-.55-1.33-.76-1.82-.2-.48-.4-.41-.55-.42h-.47a.9.9 0 0 0-.65.3 2.74 2.74 0 0 0-.86 2.04 4.76 4.76 0 0 0 1 2.53 10.9 10.9 0 0 0 4.18 3.7c1.56.67 2.17.73 2.95.61.47-.07 1.46-.6 1.66-1.17.2-.58.2-1.07.15-1.17-.06-.1-.22-.16-.47-.29Z" /></svg>
+            {k.whatsapp}
+          </a>
+        )}
+        {mail && (
+          <a class:list={["btn", wa ? "btn--ghost" : "btn--pen"]} href={mail} data-magnetic>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2" /><path d="m4 7 8 6 8-6" /></svg>
+            {k.email}
+          </a>
+        )}
+      </div>
+    </div>
+    <div class="contact__foot" data-reveal>
+      <span>{k.note}</span>
+      {site.email && <a href={`mailto:${site.email}`}>{site.email}</a>}
+      <a href={site.facebook} target="_blank" rel="noopener">{k.facebook} ↗</a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .contact {
+    position: relative;
+    padding-block: clamp(5.5rem, 14vw, 10rem) clamp(3rem, 7vw, 5rem);
+    background: var(--ink);
+    color: var(--paper);
+    overflow: hidden;
+  }
+  .contact__title {
+    font-size: clamp(3.2rem, 1.4rem + 8vw, 9.5rem);
+    margin-bottom: clamp(2rem, 5vw, 3.5rem);
+  }
+  .contact__title em {
+    padding-inline: 0.06em;
+  }
+  .contact__row {
+    display: grid;
+    gap: 2rem;
+    align-items: end;
+  }
+  .contact__text {
+    margin: 0;
+    max-width: 44ch;
+    color: rgba(244, 239, 230, 0.78);
+    font-size: clamp(1.05rem, 1rem + 0.3vw, 1.25rem);
+  }
+  .contact__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+  .contact__foot {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem 2rem;
+    margin-top: clamp(3.5rem, 8vw, 6rem);
+    padding-top: 1.6rem;
+    border-top: 1px solid var(--line-dark);
+    font-size: 0.9rem;
+    color: var(--muted-dark);
+  }
+  .contact__foot a {
+    text-decoration: none;
+    border-bottom: 1px solid rgba(244, 239, 230, 0.25);
+  }
+  .contact__foot a:hover {
+    color: var(--paper);
+    border-color: var(--pen-glow);
+  }
+  @media (min-width: 900px) {
+    .contact__row {
+      grid-template-columns: 1fr auto;
+      gap: 4rem;
+    }
+  }
+</style>

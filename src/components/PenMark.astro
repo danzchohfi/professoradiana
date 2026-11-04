@@ -1,0 +1,25 @@
+---
+// Marca de caneta vermelha desenhada à mão. O GSAP "escreve" o traço
+// (DrawSVG) quando ela entra na tela; sem JS ela aparece pronta.
+interface Props {
+  kind: "underline" | "circle" | "tick";
+  class?: string;
+}
+const { kind, class: cls = "" } = Astro.props;
+---
+
+{kind === "underline" && (
+  <svg class:list={["pen-mark pen-mark--underline", cls]} viewBox="0 0 300 20" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+    <path data-pen-draw d="M4 13.5C52 7.5 104 5 160 6.5c46 1.2 90 4.4 132 1.8" stroke-width="2.3" />
+  </svg>
+)}
+{kind === "circle" && (
+  <svg class:list={["pen-mark pen-mark--circle", cls]} viewBox="0 0 300 120" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+    <path data-pen-draw d="M250 18C205 3 98 2 46 20 6 34 4 88 62 104c66 18 196 12 226-20 26-28-6-62-66-72-44-7-92-6-130 2" stroke-width="1.7" />
+  </svg>
+)}
+{kind === "tick" && (
+  <svg class:list={["pen-mark--tick", cls]} viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+    <path data-pen-draw d="M3.5 13.2c2.1 1.4 3.7 3.2 5 5.3C11.6 12 15.6 7.3 20.8 4" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" />
+  </svg>
+)}

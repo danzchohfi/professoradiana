@@ -1,0 +1,62 @@
+---
+import Logo from "./Logo.astro";
+import type { Content } from "../i18n/content";
+import { site } from "../data/site";
+interface Props {
+  c: Content;
+}
+const { c } = Astro.props;
+const year = new Date().getFullYear();
+---
+
+<footer class="footer on-dark">
+  <div class="wrap footer__inner">
+    <Logo href={c.path} label="Professora Diana" />
+    <p class="footer__tag serif">{c.footer.tagline}</p>
+    <p class="footer__legal">© {year} {site.person} · {c.footer.rights}</p>
+    <a class="footer__top" href="#topo" data-to-top>{c.footer.top} ↑</a>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    background: var(--ink);
+    color: var(--paper);
+    padding-block: 2.4rem calc(2.4rem + env(safe-area-inset-bottom));
+    border-top: 1px solid var(--line-dark);
+  }
+  .footer__inner {
+    display: grid;
+    gap: 1.2rem;
+    align-items: center;
+  }
+  .footer__tag {
+    margin: 0;
+    font-style: italic;
+    font-variation-settings: "SOFT" 100, "WONK" 1;
+    font-size: 1.15rem;
+    color: rgba(244, 239, 230, 0.8);
+  }
+  .footer__legal {
+    margin: 0;
+    font-size: 0.82rem;
+    color: var(--muted-dark);
+  }
+  .footer__top {
+    font-size: 0.85rem;
+    text-decoration: none;
+    color: var(--muted-dark);
+    min-height: 2.75rem;
+    display: inline-flex;
+    align-items: center;
+  }
+  .footer__top:hover {
+    color: var(--paper);
+  }
+  @media (min-width: 900px) {
+    .footer__inner {
+      grid-template-columns: auto 1fr auto auto;
+      gap: 2.5rem;
+    }
+  }
+</style>

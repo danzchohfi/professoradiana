@@ -1,0 +1,305 @@
+/* Identidade: tinta (ink) + papel (paper) + caneta vermelha (pen).
+   A caneta é o gesto da professora que corrige — aparece só em marcas
+   desenhadas à mão (sublinhado, círculo, visto) e em detalhes pontuais. */
+:root {
+  --ink: #0e1524;
+  --ink-2: #172034;
+  --ink-3: #243049;
+  --paper: #f4efe6;
+  --paper-2: #ebe4d7;
+  --paper-3: #e0d7c6;
+  --pen: #e2462c;
+  --pen-ink: #b8321b; /* caneta legível em texto pequeno sobre papel */
+  --pen-glow: #ff6a4d; /* caneta sobre fundo escuro */
+  --muted: #5d6475;
+  --muted-dark: #a7adbb;
+  --line: rgba(14, 21, 36, 0.14);
+  --line-dark: rgba(244, 239, 230, 0.16);
+
+  --serif: "Fraunces Variable", "Iowan Old Style", Georgia, serif;
+  --sans: "Inter Variable", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+
+  --gutter: clamp(1rem, 4vw, 3rem);
+  --max: 1320px;
+  --radius: 18px;
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+  color-scheme: light;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  scroll-padding-top: 5rem;
+}
+
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-stopped {
+  overflow: clip;
+}
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
+  line-height: 1.6;
+  font-feature-settings: "ss01", "cv11";
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: clip;
+}
+
+img,
+svg,
+canvas,
+video {
+  display: block;
+  max-width: 100%;
+}
+
+a {
+  color: inherit;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+}
+
+::selection {
+  background: var(--pen);
+  color: var(--paper);
+}
+
+:focus-visible {
+  outline: 2px solid var(--pen);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.skip {
+  position: fixed;
+  left: 1rem;
+  top: 1rem;
+  z-index: 100;
+  padding: 0.75rem 1rem;
+  background: var(--paper);
+  color: var(--ink);
+  border-radius: 999px;
+  transform: translateY(-200%);
+  transition: transform 0.2s var(--ease);
+}
+.skip:focus {
+  transform: none;
+}
+
+.wrap {
+  width: 100%;
+  max-width: var(--max);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+/* ---------- Tipografia ---------- */
+.serif {
+  font-family: var(--serif);
+  font-optical-sizing: auto;
+  font-variation-settings: "SOFT" 50, "WONK" 0;
+}
+
+.display {
+  font-family: var(--serif);
+  font-optical-sizing: auto;
+  font-variation-settings: "SOFT" 40, "WONK" 0;
+  font-weight: 340;
+  letter-spacing: -0.025em;
+  line-height: 0.98;
+  margin: 0;
+}
+
+.display em,
+.serif em {
+  font-style: italic;
+  font-variation-settings: "SOFT" 100, "WONK" 1;
+  font-weight: 300;
+}
+
+.h2 {
+  font-size: clamp(2.2rem, 1.4rem + 3.6vw, 4.6rem);
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin: 0 0 1.4rem;
+  font-size: 0.78rem;
+  font-weight: 560;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.eyebrow::before {
+  content: "";
+  width: 1.6rem;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--pen);
+}
+.on-dark .eyebrow {
+  color: var(--muted-dark);
+}
+
+/* ---------- Botões ---------- */
+.btn {
+  --bg: var(--paper);
+  --fg: var(--ink);
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  min-height: 3.25rem;
+  padding: 0.85rem 1.5rem;
+  border-radius: 999px;
+  background: var(--bg);
+  color: var(--fg);
+  font-weight: 560;
+  font-size: 1rem;
+  text-decoration: none;
+  line-height: 1.1;
+  border: 1px solid transparent;
+  transition:
+    background-color 0.3s var(--ease),
+    color 0.3s var(--ease),
+    border-color 0.3s var(--ease);
+  will-change: transform;
+}
+.btn svg {
+  width: 1.1em;
+  height: 1.1em;
+  flex: none;
+}
+.btn--pen {
+  --bg: var(--pen);
+  --fg: #fff;
+}
+.btn--pen:hover {
+  --bg: #cc3a21;
+}
+.btn--ghost {
+  --bg: transparent;
+  --fg: currentColor;
+  border-color: currentColor;
+}
+.btn--ghost:hover {
+  --bg: rgba(127, 127, 127, 0.12);
+}
+.btn--ink {
+  --bg: var(--ink);
+  --fg: var(--paper);
+}
+.btn--ink:hover {
+  --bg: var(--ink-3);
+}
+
+.link-arrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 560;
+  text-decoration: none;
+  border-bottom: 1px solid currentColor;
+  padding-bottom: 0.15rem;
+}
+.link-arrow span {
+  transition: transform 0.35s var(--ease);
+}
+.link-arrow:hover span {
+  transform: translateX(4px);
+}
+
+/* ---------- Marca de caneta (SVG desenhado à mão) ---------- */
+.pen-wrap {
+  position: relative;
+  display: inline-block;
+  white-space: nowrap;
+}
+.pen-mark {
+  position: absolute;
+  pointer-events: none;
+  overflow: visible;
+  color: var(--pen);
+}
+.pen-mark path {
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.pen-mark--underline {
+  left: -3%;
+  right: -3%;
+  bottom: -0.16em;
+  width: 106%;
+  height: 0.32em;
+}
+.pen-mark--circle {
+  left: -9%;
+  top: -16%;
+  width: 118%;
+  height: 132%;
+}
+.on-dark .pen-mark {
+  color: var(--pen-glow);
+}
+
+/* Revelações: só escondemos quando o JS de movimento está ativo
+   (sem JS, ou com movimento reduzido, tudo aparece normalmente). */
+html.motion [data-reveal] {
+  opacity: 0;
+  transform: translateY(28px);
+}
+html.motion [data-hero-in] {
+  opacity: 0;
+}
+html.motion [data-hero-title] {
+  visibility: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

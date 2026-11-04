@@ -1,0 +1,182 @@
+---
+import type { Content } from "../i18n/content";
+interface Props {
+  c: Content;
+}
+const { c } = Astro.props;
+const m = c.method;
+---
+
+<section class="method on-dark" id="metodo" aria-labelledby="metodo-title">
+  <div class="wrap method__grid">
+    <div class="method__head">
+      <div class="method__sticky">
+        <p class="eyebrow" data-reveal>{m.eyebrow}</p>
+        <h2 class="display h2" id="metodo-title" data-reveal>{m.title}</h2>
+      </div>
+    </div>
+
+    <ol class="method__steps" data-steps>
+      <span class="method__rail" aria-hidden="true"><span data-steps-progress></span></span>
+      {m.steps.map((s, i) => (
+        <li class="step" data-step data-reveal>
+          <span class="step__n" aria-hidden="true">{i + 1}</span>
+          <div>
+            <h3 class="step__title serif">{s.title}</h3>
+            <p class="step__text">{s.text}</p>
+          </div>
+        </li>
+      ))}
+    </ol>
+  </div>
+
+  <div class="wrap">
+    <div class="formats">
+      <p class="formats__title" data-reveal>{m.formatsTitle}</p>
+      <ul class="formats__list">
+        {m.formats.map((f) => (
+          <li class="format" data-reveal>
+            <h3 class="format__title serif">{f.title}</h3>
+            <p class="format__text">{f.text}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </div>
+</section>
+
+<style>
+  .method {
+    position: relative;
+    padding-block: clamp(5rem, 12vw, 9rem);
+    background: var(--ink);
+    color: var(--paper);
+  }
+  .method__grid {
+    display: grid;
+    gap: 3rem;
+  }
+  .method__head .h2 {
+    max-width: 13ch;
+  }
+  .method__steps {
+    position: relative;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: clamp(2.2rem, 5vw, 3.6rem);
+  }
+  .method__rail {
+    position: absolute;
+    left: 1.45rem;
+    top: 1.5rem;
+    bottom: 1.5rem;
+    width: 1px;
+    background: var(--line-dark);
+  }
+  .method__rail span {
+    position: absolute;
+    inset: 0;
+    background: var(--pen-glow);
+    transform-origin: top;
+    transform: scaleY(0);
+  }
+  html:not(.motion) .method__rail span {
+    transform: scaleY(1);
+  }
+  .step {
+    position: relative;
+    display: grid;
+    grid-template-columns: 2.9rem 1fr;
+    gap: 1.4rem;
+  }
+  .step__n {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    place-items: center;
+    width: 2.9rem;
+    height: 2.9rem;
+    border-radius: 50%;
+    border: 1px solid var(--line-dark);
+    background: var(--ink);
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 1.15rem;
+    transition:
+      background-color 0.5s var(--ease),
+      border-color 0.5s var(--ease),
+      color 0.5s var(--ease);
+  }
+  .step:global(.is-active) .step__n,
+  html:not(.motion) .step__n {
+    background: var(--pen);
+    border-color: var(--pen);
+    color: #fff;
+  }
+  .step__title {
+    margin: 0.35rem 0 0.5rem;
+    font-size: clamp(1.45rem, 1.1rem + 1.2vw, 2.1rem);
+    font-weight: 340;
+    letter-spacing: -0.015em;
+    line-height: 1.1;
+  }
+  .step__text {
+    margin: 0;
+    max-width: 46ch;
+    color: rgba(244, 239, 230, 0.72);
+  }
+  .formats {
+    margin-top: clamp(4rem, 9vw, 7rem);
+    padding-top: 2.4rem;
+    border-top: 1px solid var(--line-dark);
+    display: grid;
+    gap: 1.6rem;
+  }
+  .formats__title {
+    margin: 0;
+    font-size: 0.78rem;
+    font-weight: 560;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--muted-dark);
+  }
+  .formats__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 1.6rem;
+  }
+  .format__title {
+    margin: 0 0 0.3rem;
+    font-size: clamp(1.4rem, 1.1rem + 1vw, 1.9rem);
+    font-weight: 340;
+    font-style: italic;
+    font-variation-settings: "SOFT" 100, "WONK" 1;
+  }
+  .format__text {
+    margin: 0;
+    color: rgba(244, 239, 230, 0.72);
+  }
+  @media (min-width: 700px) {
+    .formats__list {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2.4rem;
+    }
+  }
+  @media (min-width: 900px) {
+    .method__grid {
+      grid-template-columns: 5fr 6fr;
+      gap: 4rem;
+    }
+    .method__sticky {
+      position: sticky;
+      top: 8rem;
+    }
+    .formats {
+      gap: 2.2rem;
+    }
+  }
+</style>

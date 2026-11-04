@@ -1,0 +1,254 @@
+---
+import { Picture } from "astro:assets";
+import type { ImageMetadata } from "astro";
+import PenMark from "./PenMark.astro";
+import type { Content } from "../i18n/content";
+
+interface Props {
+  c: Content;
+}
+const { c } = Astro.props;
+const a = c.about;
+
+// Retrato: basta salvar a foto como src/assets/diana.jpg (ou .png/.webp).
+// O build gera AVIF/WebP em vários tamanhos e o filtro duotone (Base.astro)
+// dá à foto a mesma paleta do site, seja ela de estúdio ou de celular.
+const found = import.meta.glob<{ default: ImageMetadata }>("../assets/diana.{jpg,jpeg,png,webp,avif}", { eager: true });
+const portrait = Object.values(found)[0]?.default;
+---
+
+<section class="about" id="sobre" aria-labelledby="sobre-title">
+  <div class="wrap about__grid">
+    <div class="about__cardcol">
+      <figure class="card" data-card>
+        <figcaption class="card__label">{a.card.label}</figcaption>
+        {portrait ? (
+          <div class="card__photo">
+            <Picture src={portrait} alt={a.name} widths={[360, 560, 820]} sizes="(min-width: 900px) 420px, 88vw" formats={["avif", "webp"]} />
+          </div>
+        ) : (
+          <div class="card__mono serif" aria-hidden="true">
+            <span>D</span><span>Z</span>
+          </div>
+        )}
+        <dl class="card__rows">
+          {a.card.rows.map((r) => (
+            <div class="card__row">
+              <dt>{r.k}</dt>
+              <dd>{r.v}</dd>
+            </div>
+          ))}
+        </dl>
+        <PenMark kind="tick" class="card__tick" />
+      </figure>
+    </div>
+
+    <div class="about__text">
+      <p class="eyebrow" data-reveal>{a.eyebrow}</p>
+      <h2 class="display h2" id="sobre-title" data-reveal>{a.name}</h2>
+      <p class="about__role" data-reveal>{a.role}</p>
+      {a.paragraphs.map((p) => <p class="about__p" data-reveal>{p}</p>)}
+      <p class="about__principle serif" data-reveal>
+        <span class="pen-wrap">{a.principle}</span>
+      </p>
+
+      <ul class="facts">
+        {a.facts.map((f) => (
+          <li class="fact" data-reveal>
+            <span class="fact__v serif" data-count={/^\d+/.test(f.value) ? f.value : undefined}>{f.value}</span>
+            <span class="fact__l">{f.label}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </div>
+</section>
+
+<style>
+  .about {
+    padding-block: clamp(5rem, 12vw, 9rem);
+    background: var(--paper);
+  }
+  .about__grid {
+    display: grid;
+    gap: clamp(3rem, 6vw, 5rem);
+  }
+  .about__cardcol {
+    display: flex;
+    justify-content: center;
+  }
+
+  /* Ficha pautada, com a margem vermelha do caderno. Tudo dentro dela anda
+     em múltiplos da pauta (--rule): cada linha de texto cai sobre uma linha. */
+  .card {
+    --rule: 2rem;
+    position: relative;
+    width: min(100%, 28rem);
+    margin: 0;
+    padding: var(--rule) 1.5rem var(--rule) 3.3rem;
+    border-radius: 6px;
+    background-color: #fbf8f2;
+    background-image:
+      linear-gradient(90deg, transparent 2.3rem, rgba(226, 70, 44, 0.55) 2.3rem, rgba(226, 70, 44, 0.55) calc(2.3rem + 1.5px), transparent calc(2.3rem + 1.5px)),
+      repeating-linear-gradient(to bottom, transparent 0, transparent calc(var(--rule) - 1px), rgba(52, 96, 168, 0.17) calc(var(--rule) - 1px), rgba(52, 96, 168, 0.17) var(--rule));
+    background-position: 0 0, 0 -0.42rem;
+    box-shadow:
+      0 1px 0 rgba(14, 21, 36, 0.06),
+      0 30px 60px -28px rgba(14, 21, 36, 0.45),
+      0 12px 24px -16px rgba(14, 21, 36, 0.25);
+    transform: rotate(-2deg);
+  }
+  .card__label {
+    margin: 0;
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    line-height: var(--rule);
+  }
+  .card__mono {
+    display: flex;
+    align-items: baseline;
+    gap: 0.02em;
+    height: calc(var(--rule) * 4);
+    margin: 0 0 0 -0.06em;
+    font-size: 8.6rem;
+    line-height: calc(var(--rule) * 4);
+    font-style: italic;
+    font-weight: 300;
+    font-variation-settings: "SOFT" 100, "WONK" 1;
+    color: var(--ink);
+  }
+  .card__mono span + span {
+    color: var(--pen);
+    font-size: 0.55em;
+  }
+  .card__photo {
+    position: relative;
+    height: calc(var(--rule) * 11);
+    margin: calc(var(--rule) * 0.5) 0;
+    overflow: hidden;
+    border-radius: 4px;
+  }
+  .card__photo :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: url(#duotone) contrast(1.06);
+  }
+  .card__rows {
+    margin: 0;
+  }
+  .card__row {
+    display: grid;
+    grid-template-columns: 5.6rem 1fr;
+    gap: 0.6rem;
+    align-items: start;
+  }
+  .card__row dt {
+    font-size: 0.62rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    line-height: var(--rule);
+    color: var(--muted);
+  }
+  .card__row dd {
+    margin: 0;
+    font-family: var(--serif);
+    font-style: italic;
+    font-variation-settings: "SOFT" 100, "WONK" 1;
+    font-size: 1rem;
+    line-height: var(--rule);
+    color: #1d2a44;
+  }
+  .card :global(.card__tick) {
+    position: absolute;
+    right: 1.2rem;
+    top: 1.1rem;
+    width: 2.4rem;
+    height: 2.4rem;
+    color: var(--pen);
+    overflow: visible;
+  }
+  @media (max-width: 420px) {
+    .card {
+      padding-left: 2.9rem;
+      padding-right: 1.1rem;
+      background-image:
+        linear-gradient(90deg, transparent 2rem, rgba(226, 70, 44, 0.55) 2rem, rgba(226, 70, 44, 0.55) calc(2rem + 1.5px), transparent calc(2rem + 1.5px)),
+        repeating-linear-gradient(to bottom, transparent 0, transparent calc(var(--rule) - 1px), rgba(52, 96, 168, 0.17) calc(var(--rule) - 1px), rgba(52, 96, 168, 0.17) var(--rule));
+    }
+    .card__row {
+      grid-template-columns: 1fr;
+      gap: 0;
+    }
+    .card__row dt:empty {
+      display: none;
+    }
+    .card__mono {
+      font-size: 7.4rem;
+    }
+  }
+
+  .about__role {
+    margin: -0.2rem 0 2rem;
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 1.3rem;
+    font-variation-settings: "SOFT" 100, "WONK" 1;
+    color: var(--muted);
+  }
+  .about__p {
+    margin: 0 0 1.2rem;
+    max-width: 58ch;
+    color: #2c3445;
+  }
+  .about__principle {
+    margin: 2.2rem 0 0;
+    max-width: 26ch;
+    font-size: clamp(1.5rem, 1.1rem + 1.4vw, 2.3rem);
+    font-weight: 340;
+    line-height: 1.15;
+    letter-spacing: -0.015em;
+  }
+  .about__principle .pen-wrap {
+    white-space: normal;
+    display: inline;
+    background-image: linear-gradient(transparent 62%, rgba(226, 70, 44, 0.22) 62%, rgba(226, 70, 44, 0.22) 90%, transparent 90%);
+  }
+  .facts {
+    list-style: none;
+    margin: 3rem 0 0;
+    padding: 2rem 0 0;
+    border-top: 1px solid var(--line);
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.2rem;
+  }
+  .fact__v {
+    display: block;
+    font-size: clamp(2rem, 1.4rem + 2.4vw, 3.4rem);
+    font-weight: 320;
+    line-height: 1;
+    letter-spacing: -0.03em;
+    margin-bottom: 0.5rem;
+    font-variant-numeric: tabular-nums;
+  }
+  .fact__l {
+    display: block;
+    font-size: 0.85rem;
+    line-height: 1.35;
+    color: var(--muted);
+  }
+  @media (min-width: 900px) {
+    .about__grid {
+      grid-template-columns: 5fr 6fr;
+      align-items: center;
+    }
+    .card {
+      margin-left: 0;
+    }
+  }
+</style>
